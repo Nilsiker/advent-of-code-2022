@@ -2,7 +2,6 @@ use advent_of_code_2022::read_input;
 
 fn main() {
     let lines = read_input(1);
-
     let mut elves = vec![Elf::default()];
 
     for line in lines {
