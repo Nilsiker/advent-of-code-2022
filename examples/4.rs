@@ -9,15 +9,10 @@ fn main() {
     let mut partial_overlaps_count = 0;
 
     for (a, b) in pairs {
-        // count full overlaps..
-        if a.sections.contains(b.sections.start()) && a.sections.contains(b.sections.end()) {
-            fully_contained_count += 1;
-        } else if b.sections.contains(a.sections.start()) && b.sections.contains(a.sections.end()) {
+        if ranges_fully_overlap(&a.sections, &b.sections) {
             fully_contained_count += 1;
         }
-
-        // count partial overlaps..
-        if ranges_partially_overlap(a.sections, b.sections) {
+        if ranges_partially_overlap(&a.sections, &b.sections) {
             partial_overlaps_count += 1;
         }
     }
@@ -26,7 +21,12 @@ fn main() {
     println!("Pairs where sections overlap partially: {partial_overlaps_count}");
 }
 
-fn ranges_partially_overlap(first: RangeInclusive<u32>, other: RangeInclusive<u32>) -> bool {
+fn ranges_fully_overlap(first: &RangeInclusive<u32>, second: &RangeInclusive<u32>) -> bool {
+    first.contains(second.start()) && first.contains(second.end())
+        || second.contains(first.start()) && second.contains(first.end())
+}
+
+fn ranges_partially_overlap(first: &RangeInclusive<u32>, other: &RangeInclusive<u32>) -> bool {
     first.contains(other.start())
         || first.contains(other.end())
         || other.contains(first.start())
