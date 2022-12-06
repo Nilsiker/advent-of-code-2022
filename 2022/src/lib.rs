@@ -1,11 +1,11 @@
 use std::{
     fs::File,
-    io::{BufRead, BufReader},
+    io::{BufRead, BufReader, Read},
 };
 
-pub fn read_input(puzzle_number: u8) -> Vec<String> {
+pub fn read_input_lines(puzzle_number: u8) -> Vec<String> {
     let Ok(file) = File::open(format!("./res/{puzzle_number}/input.txt")) else  {
-        panic!("The elves must have misplaced the calories manifest...");
+        panic!("The elves must have misplaced the input data...");
     };
 
     BufReader::new(file)
@@ -19,4 +19,15 @@ pub fn read_input(puzzle_number: u8) -> Vec<String> {
             }
         })
         .collect()
+}
+
+pub fn read_input_string(puzzle_number: u8) -> String {
+    let Ok(file) = File::open(format!("./res/{puzzle_number}/input.txt")) else  {
+        panic!("The elves must have misplaced the input data...");
+    };
+    let mut buf: String = String::new();
+    BufReader::new(file)
+        .read_to_string(&mut buf)
+        .expect(format!("error parsing day {puzzle_number} input as string.").as_str());
+    buf
 }
