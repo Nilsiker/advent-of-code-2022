@@ -4,7 +4,7 @@ use std::{
 };
 
 pub fn read_input_lines(puzzle_number: u8) -> Vec<String> {
-    let Ok(file) = File::open(format!("./res/{puzzle_number}/input.txt")) else  {
+    let Ok(file) = File::open(format!("./inputs/{puzzle_number}.txt")) else  {
         panic!("The elves must have misplaced the input data...");
     };
 
@@ -22,7 +22,7 @@ pub fn read_input_lines(puzzle_number: u8) -> Vec<String> {
 }
 
 pub fn read_input_string(puzzle_number: u8) -> String {
-    let Ok(file) = File::open(format!("./res/{puzzle_number}/input.txt")) else  {
+    let Ok(file) = File::open(format!("./inputs/{puzzle_number}.txt")) else  {
         panic!("The elves must have misplaced the input data...");
     };
     let mut buf: String = String::new();
