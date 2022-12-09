@@ -1,44 +1,103 @@
 use std::{
-    cell::RefCell,
+    cell::{Ref, RefCell},
     rc::{Rc, Weak},
 };
 
-fn main() {
-    let root_dir = Dir::new("/");
-    let root = Rc::new(RefCell::new(root_dir)); // keep reference to root alive
-    
-    let mut device = Device {
-        wd: root.clone(),
-    };
-    device.touch(".config", 500);
+use advent_of_code_2022::read_input_lines;
 
-    device.mkdir("a");
-    device.cd("a");
-    device.touch("file.txt", 100);
-    device.cd("..");
-    device.wd.borrow().print_tree();
+fn main() {
+    let mut device = Device::new();
+    let mut lines = read_input_lines(7);
+    lines.remove(0);
+    for line in lines.iter() {
+        let parts = line.split(' ').collect::<Vec<&str>>();
+        if line.starts_with("$") {
+            if line.starts_with("$ ls") {
+                continue;
+            }
+            device.cd(parts[2]);
+        } else if line.starts_with("dir") {
+            device.mkdir(parts[1]);
+        } else {
+            device.touch(parts[0].parse::<usize>().unwrap())
+        }
+    }
+
+    let mut v = vec![];
+    recursively_collect_dir_sizes_into(device.root.borrow(), &mut v);
+    let filtered: Vec<(String, usize)> = v
+        .iter()
+        .filter(|d| d.1 <= 100000)
+        .map(|d| d.clone())
+        .collect();
+    println!(
+        "Sum of all sizes no greater than 100000 is {:#?}",
+        &filtered.iter().map(|d| d.1).sum::<usize>()
+    );
+
+    let total = 70000000;
+    let needed = 30000000;
+    let used = device.root.borrow().get_size();
+    let remaining = total - used;
+    let min_to_delete = needed - remaining;
+
+    let mut filtered_delete: Vec<(String, usize)> = v
+        .iter()
+        .filter(|d| d.1 >= min_to_delete)
+        .map(|d| d.clone())
+        .collect();
+    filtered_delete.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+
+    println!(
+        "Minimum directory to delete has size {}",
+        filtered_delete[0].1
+    );
+}
+
+fn recursively_collect_dir_sizes_into(dir: Ref<Dir>, v: &mut Vec<(String, usize)>) {
+    for dir in &dir.dirs {
+        v.push((dir.borrow().name.clone(), dir.borrow().get_size()));
+        recursively_collect_dir_sizes_into(dir.borrow(), v);
+    }
 }
 
 struct Device {
+    root: Rc<RefCell<Dir>>,
     wd: Rc<RefCell<Dir>>,
 }
 impl Device {
-    fn ls(&self) {
-        self.wd.borrow().ls();
+    fn new() -> Self {
+        let root_dir = Dir::new("/");
+        let root = Rc::new(RefCell::new(root_dir)); // keep reference to root alive
+
+        Self {
+            root: root.clone(),
+            wd: root.clone(),
+        }
     }
-    fn touch(&self, name: &str, size: usize) {
-        self.wd.borrow_mut().add_file(name, size);
+
+    fn touch(&self, size: usize) {
+        self.wd.borrow_mut().add_file(size);
     }
+
     fn mkdir(&mut self, name: &str) {
         let dir = Dir::new(name);
         self.wd.add_dir(dir);
     }
+
     fn cd(&mut self, name: &str) {
         if name == ".." {
             let new_wd = self.wd.borrow_mut().parent.upgrade().unwrap();
             self.wd = new_wd;
         } else {
-            let new_wd = self.wd.borrow_mut().dirs.iter().find(|dir| dir.borrow().name == name).unwrap().clone();
+            let new_wd = self
+                .wd
+                .borrow_mut()
+                .dirs
+                .iter()
+                .find(|dir| dir.borrow().name == name)
+                .unwrap()
+                .clone();
             self.wd = new_wd;
         }
     }
@@ -67,46 +126,22 @@ impl Dir {
         parent.borrow_mut().add_dir(child.clone());
     }
 
-    fn add_file(&mut self, name: &str, size: usize) {
-        self.files.push(File::new(name, size));
+    fn add_file(&mut self, size: usize) {
+        self.files.push(File(size));
     }
 
     fn add_dir(&mut self, dir: Rc<RefCell<Dir>>) {
         self.dirs.push(dir);
     }
 
-    fn get_parent(&self) -> Option<Rc<RefCell<Dir>>> {
-        self.parent.upgrade()
-    }
-
-    fn ls(&self) {
-        for dir in self.dirs.iter() {
-            println!("dir {}", dir.borrow().name);
-        }
-        for file in &self.files {
-            println!("{} {}", file.size, file.name);
-        }
-    }
-
     fn get_size(&self) -> usize {
-        let file_sizes = self.files.iter().map(|file| file.size).sum::<usize>();
+        let file_sizes = self.files.iter().map(|file| file.0).sum::<usize>();
         let mut dir_sizes = 0;
         for dir in self.dirs.iter() {
             dir_sizes += dir.borrow().get_size();
         }
 
         file_sizes + dir_sizes
-    }
-
-    fn print_tree(&self) {
-        println!("- {} (dir)", self.name);
-
-        for file in &self.files {
-            println!("{} (file, size={})", file.name, file.size);
-        }
-        for dir in &self.dirs {
-            dir.borrow().print_tree();
-        }
     }
 }
 
@@ -119,22 +154,5 @@ impl Convenience for Rc<RefCell<Dir>> {
     }
 }
 
-impl Drop for Dir {
-    fn drop(&mut self) {
-        println!("dropped {}", self.name);
-    }
-}
-
 #[derive(Debug)]
-struct File {
-    name: String,
-    size: usize,
-}
-impl File {
-    fn new(name: &str, size: usize) -> Self {
-        Self {
-            name: name.to_string(),
-            size: size,
-        }
-    }
-}
+struct File(usize);
