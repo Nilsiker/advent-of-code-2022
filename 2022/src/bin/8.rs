@@ -3,10 +3,10 @@ use advent_of_code_2022::read_input_lines;
 fn main() {
     let grid = TreeGrid::new(read_input_lines(8));
     let width = grid.grid_width;
-    
+
     let mut visible_counter = 4 * (width - 1);
     let mut best_score = 0;
-    
+
     for x in 1..width - 1 {
         let col = grid.get_col(x);
         for y in 1..width - 1 {
@@ -111,8 +111,7 @@ impl TreeGrid {
         let grid_width = lines[0].len();
         let heights: Vec<usize> = lines
             .iter()
-            .map(|line| line.chars())
-            .flatten()
+            .flat_map(|line| line.chars())
             .map(|char| char.to_digit(10).unwrap() as usize)
             .collect();
         Self {

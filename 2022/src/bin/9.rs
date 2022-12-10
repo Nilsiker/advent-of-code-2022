@@ -60,7 +60,7 @@ impl Rope {
             let next = slices.1.first_mut().unwrap();
             next.adjust_knot(lead);
         }
-        self.tail_visited_locations.insert(self.tail().clone());
+        self.tail_visited_locations.insert(*self.tail());
     }
 }
 
@@ -135,28 +135,21 @@ impl Knot {
             return Dir::None;
         }
         // this is very unreadable...
-        if other.x > *x {
-            if other.y == *y {
-                Dir::R
-            } else if other.y > *y {
-                Dir::UR
-            } else {
-                Dir::DR
-            }
-        } else if other.x < *x {
-            if other.y == *y {
-                Dir::L
-            } else if other.y > *y {
-                Dir::UL
-            } else {
-                Dir::DL
-            }
-        } else {
-            if other.y > *y {
-                Dir::U
-            } else {
-                Dir::D
-            }
+        match x.cmp(&other.x) {
+            std::cmp::Ordering::Less => match y.cmp(&other.y) {
+                std::cmp::Ordering::Less => Dir::UR,
+                std::cmp::Ordering::Equal => Dir::R,
+                std::cmp::Ordering::Greater => Dir::DR,
+            },
+            std::cmp::Ordering::Equal => match y.cmp(&other.y) {
+                std::cmp::Ordering::Greater => Dir::D,
+                _ => Dir::U,
+            },
+            std::cmp::Ordering::Greater => match y.cmp(&other.y) {
+                std::cmp::Ordering::Less => Dir::UL,
+                std::cmp::Ordering::Equal => Dir::L,
+                std::cmp::Ordering::Greater => Dir::DL,
+            },
         }
     }
 

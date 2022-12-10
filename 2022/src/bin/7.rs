@@ -11,7 +11,7 @@ fn main() {
     lines.remove(0);
     for line in lines.iter() {
         let parts = line.split(' ').collect::<Vec<&str>>();
-        if line.starts_with("$") {
+        if line.starts_with('$') {
             if line.starts_with("$ ls") {
                 continue;
             }
@@ -25,11 +25,7 @@ fn main() {
 
     let mut v = vec![];
     recursively_collect_dir_sizes_into(device.root.borrow(), &mut v);
-    let filtered: Vec<(String, usize)> = v
-        .iter()
-        .filter(|d| d.1 <= 100000)
-        .map(|d| d.clone())
-        .collect();
+    let filtered: Vec<(String, usize)> = v.iter().filter(|d| d.1 <= 100000).cloned().collect();
     println!(
         "Sum of all sizes no greater than 100000 is {:#?}",
         &filtered.iter().map(|d| d.1).sum::<usize>()
@@ -41,11 +37,8 @@ fn main() {
     let remaining = total - used;
     let min_to_delete = needed - remaining;
 
-    let mut filtered_delete: Vec<(String, usize)> = v
-        .iter()
-        .filter(|d| d.1 >= min_to_delete)
-        .map(|d| d.clone())
-        .collect();
+    let mut filtered_delete: Vec<(String, usize)> =
+        v.iter().filter(|d| d.1 >= min_to_delete).cloned().collect();
     filtered_delete.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
 
     println!(
@@ -72,7 +65,7 @@ impl Device {
 
         Self {
             root: root.clone(),
-            wd: root.clone(),
+            wd: root,
         }
     }
 

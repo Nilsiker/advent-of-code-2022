@@ -35,9 +35,8 @@ struct Device {
     screen: Vec<char>,
 }
 impl Device {
-    fn new(mut ops: Vec<Op>) -> Self {
-        let operations: Vec<Operation> =
-            ops.into_iter().map(|op| Operation::new(op)).rev().collect();
+    fn new(ops: Vec<Op>) -> Self {
+        let operations: Vec<Operation> = ops.into_iter().map(Operation::new).rev().collect();
         Self {
             register: 1,
             operations,

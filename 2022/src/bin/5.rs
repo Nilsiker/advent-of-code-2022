@@ -15,16 +15,15 @@ fn main() {
     perform_move(&stacks, &instructions, true);
 }
 
-fn perform_move(stacks: &Stacks, instructions: &Vec<Instruction>, use_crate_mover_9001: bool) {
+fn perform_move(stacks: &Stacks, instructions: &[Instruction], use_crate_mover_9001: bool) {
     let mut stacks = stacks.clone();
-    let instructions = instructions.clone();
     for instruction in instructions {
         let Instruction { quantity, from, to } = instruction;
-        let mut picked = stacks.pick(quantity, from);
+        let mut picked = stacks.pick(*quantity, *from);
         if !use_crate_mover_9001 {
             picked.reverse();
         }
-        stacks.place(to, picked);
+        stacks.place(*to, picked);
     }
 
     print!(
@@ -32,7 +31,7 @@ fn perform_move(stacks: &Stacks, instructions: &Vec<Instruction>, use_crate_move
         if use_crate_mover_9001 { 9001 } else { 9000 }
     );
     for stack in stacks {
-        print!(" {:?} ", stack.last().unwrap());
+        print!("{}", stack.last().unwrap());
     }
 }
 
@@ -41,14 +40,13 @@ fn find_blank_line_index(lines: &Vec<String>) -> usize {
     lines.iter().enumerate().for_each(|(index, line)| {
         if line.is_empty() {
             blank_line_index = index;
-            return;
         }
     });
 
     blank_line_index
 }
 
-fn parse_crates(crate_data: &Vec<String>) -> Vec<Vec<char>> {
+fn parse_crates(crate_data: &[String]) -> Vec<Vec<char>> {
     let (number_line, crate_lines) = crate_data.split_last().unwrap();
     let number_of_stacks = number_line.split_whitespace().count();
     let mut crate_stacks = vec![vec![]; number_of_stacks];

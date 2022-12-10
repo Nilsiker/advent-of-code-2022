@@ -89,10 +89,7 @@ impl Rucksack {
 
         let item = shared.get(0);
 
-        match item {
-            Some(char) => Some(**char),
-            None => None,
-        }
+        item.map(|char| **char)
     }
 
     fn all_items(&self) -> &Vec<char> {

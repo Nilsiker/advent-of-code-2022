@@ -28,6 +28,8 @@ pub fn read_input_string(puzzle_number: u8) -> String {
     let mut buf: String = String::new();
     BufReader::new(file)
         .read_to_string(&mut buf)
-        .expect(format!("error parsing day {puzzle_number} input as string.").as_str());
+        .unwrap_or_else(|e| {
+            panic!("error parsing day {puzzle_number} input as string.\nError: {e}")
+        });
     buf
 }

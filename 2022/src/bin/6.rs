@@ -15,7 +15,7 @@ fn main() {
 }
 
 fn find_end_of_segment_with_duplicate_characters(
-    data: &String,
+    data: &str,
     segment_length: usize,
 ) -> Option<usize> {
     let mut set = HashSet::<char>::new();
