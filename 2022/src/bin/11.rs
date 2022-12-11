@@ -1,12 +1,24 @@
 use advent_of_code_2022::read_input_blocks;
 
-const PART_A: bool = true;
+enum Part {
+    A,
+    B,
+}
 
 fn main() {
+    do_the_rounds(Part::A);
+    do_the_rounds(Part::B);
+}
+
+fn do_the_rounds(part: Part) {
     let mut troop = get_monkeys();
-    let rounds = if PART_A { 20 } else { 10000 };
+    let (rounds, manage_worry) = match part {
+        Part::A => (20, false),
+        Part::B => (10000, true),
+    };
+
     for _ in 0..rounds {
-        troop.take_round();
+        troop.take_round(manage_worry);
     }
 
     let mut monkeys_sorted_by_inspection_count = troop.monkeys;
@@ -94,10 +106,10 @@ struct Troop {
     worry_managing_number: usize,
 }
 impl Troop {
-    fn take_round(&mut self) {
+    fn take_round(&mut self, manage_worry: bool) {
         for from in 0..self.monkeys.len() {
             while self.get_num_of_items(from) > 0 {
-                let to = self.test_item(from, 0);
+                let to = self.test_item(from, 0, manage_worry);
                 self.throw_item(0, from, to);
             }
         }
@@ -107,8 +119,8 @@ impl Troop {
         self.monkeys[monkey].items.len()
     }
 
-    fn test_item(&mut self, monkey: usize, item: usize) -> usize {
-        self.monkeys[monkey].test_item(item, self.worry_managing_number)
+    fn test_item(&mut self, monkey: usize, item: usize, manage_worry: bool) -> usize {
+        self.monkeys[monkey].test_item(item, self.worry_managing_number, manage_worry)
     }
 
     fn throw_item(&mut self, item: usize, from: usize, to: usize) {
@@ -127,17 +139,20 @@ struct Monkey {
     test: Test,
 }
 impl Monkey {
-    fn test_item(&mut self, index: usize, worry_managing_number: usize) -> usize {
+    fn test_item(
+        &mut self,
+        index: usize,
+        worry_managing_number: usize,
+        manage_worry: bool,
+    ) -> usize {
         self.items_inspected += 1;
         let mut item = &mut self.items[index];
         let op = &self.op;
         let test = &self.test;
 
-        let divisor = &self.test.divisible_by;
-
-        let mut new_worry = match op.operator {
+        let new_worry = match op.operator {
             Operator::Add => match &op.operand {
-                Operand::Item => item.0 + &item.0,
+                Operand::Item => item.0 + item.0,
                 Operand::Value(v) => item.0 + v,
             },
             Operator::Multiply => match &op.operand {
@@ -146,15 +161,13 @@ impl Monkey {
             },
         };
 
-        // print!("{new_worry} ");
-
-        if PART_A {
-            new_worry = new_worry / 3;
+        if manage_worry {
+            item.0 = new_worry % worry_managing_number;
+        } else {
+            item.0 = new_worry / 3;
         }
 
-        item.0 = new_worry % worry_managing_number;
-
-        if &item.0 % divisor == 0 {
+        if item.0 % self.test.divisible_by == 0 {
             test.true_monkey
         } else {
             test.false_monkey
