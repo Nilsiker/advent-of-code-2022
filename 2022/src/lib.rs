@@ -21,6 +21,13 @@ pub fn read_input_lines(puzzle_number: u8) -> Vec<String> {
         .collect()
 }
 
+pub fn read_input_blocks(puzzle_number: u8) -> Vec<String> {
+    let string = read_input_string(puzzle_number);
+
+    let blocks: Vec<String> = string.split("\r\n\r\n").map(String::from).collect();
+    blocks
+}
+
 pub fn read_input_string(puzzle_number: u8) -> String {
     let Ok(file) = File::open(format!("./inputs/{puzzle_number}.txt")) else  {
         panic!("The elves must have misplaced the input data...");
