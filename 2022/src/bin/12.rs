@@ -1,13 +1,11 @@
 use std::{
     collections::{HashSet, VecDeque},
-    time::SystemTime,
     usize,
 };
 
 use advent_of_code_2022::read_input_lines;
 
 fn main() {
-    let now = SystemTime::now();
     let data = read_input_lines(12);
     let MapData {
         grid: map,
@@ -42,8 +40,6 @@ fn main() {
         None => println!("The highest peak can't be reached."),
         Some(steps) => println!("From closest 'a' elevation, the highest peak can be reached in {steps} steps."),
     };
-
-    println!("{:?}", now.elapsed().unwrap());
 }
 
 fn dijkstra<F, S>(
