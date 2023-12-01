@@ -69,7 +69,7 @@ fn parse_instructions(instruction_lines: &Vec<String>) -> Vec<Instruction> {
     let mut instructions = vec![];
 
     for line in instruction_lines {
-        let parts = line.split(' ').into_iter().collect::<Vec<&str>>();
+        let parts = line.split(' ').collect::<Vec<&str>>();
         instructions.push(Instruction {
             quantity: parts[1].parse::<usize>().unwrap(),
             from: parts[3].parse::<usize>().unwrap(),

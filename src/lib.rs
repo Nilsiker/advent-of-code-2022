@@ -10,7 +10,6 @@ pub fn read_input_lines(year: u16, puzzle_number: u8) -> Vec<String> {
 
     BufReader::new(file)
         .lines()
-        .into_iter()
         .map(|element| {
             if let Ok(a) = element {
                 a

@@ -16,7 +16,7 @@ fn main() {
 
     let sum_part_1: u32 = read_input_lines(2023, 1)
         .iter()
-        .map(|line| get_first_and_last_token(line, &tokens_part_1))
+        .map(|line| get_first_and_last_token(line, tokens_part_1))
         .map(|tokens| str_to_str(tokens.0).to_string() + str_to_str(tokens.1))
         .map(|joined| joined.parse::<u32>().expect("parseable str"))
         .sum::<u32>();
@@ -33,7 +33,7 @@ fn main() {
 }
 
 fn get_first_and_last_token(
-    string: &String,
+    string: &str,
     tokens: &[&'static str],
 ) -> (&'static str, &'static str) {
     let mut first_token: (usize, &str) = (usize::MAX, "");
