@@ -9,8 +9,9 @@ In the best of worlds, this repo will contain all puzzle solutions for every att
 
 But as we all know, December can be a stressful time - so we'll just have to see how much time my work and everyday life leaves me to tinker with this. ☺️
 
-## Solutions
-* [2022](./2022) - ongoing
+## Achievements
+* 2022 - finished day 12
+* 2023 - ongoing
 
 ## Links
 To read about Advent of Code, hop on over to their page: https://adventofcode.com
