@@ -3,9 +3,9 @@
 
 ## Introduction
 
-Hi and welcome to my AoC repository! 🎄
+Hi and welcome to my Advent of Code repository! 🎄
 
-In the best of worlds, this repo will contain all puzzle solutions for every attempted year. 
+In the best of worlds, this repo would contain all puzzle solutions for every attempted year. 
 
 But as we all know, December can be a stressful time - so we'll just have to see how much time my work and everyday life leaves me to tinker with this. ☺️
 
