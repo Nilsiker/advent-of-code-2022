@@ -1,4 +1,4 @@
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
     let rucksacks = setup_rucksacks();
@@ -21,7 +21,7 @@ fn main() {
 }
 
 fn setup_rucksacks() -> Vec<Rucksack> {
-    let lines = read_input_lines(3);
+    let lines = read_input_lines(2022, 3);
     let mut rucksacks = vec![];
 
     for line in lines {

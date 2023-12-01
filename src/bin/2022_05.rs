@@ -1,9 +1,9 @@
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 type Stacks = Vec<Vec<char>>;
 
 fn main() {
-    let lines = read_input_lines(5);
+    let lines = read_input_lines(2022, 5);
     let blank_line_index = find_blank_line_index(&lines);
     let crate_lines = &lines[0..blank_line_index].to_vec();
     let instruction_lines = &lines[blank_line_index + 1..].to_vec();

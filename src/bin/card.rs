@@ -5,12 +5,12 @@ fn main() {
             .                                             .
             .     *                                       .
             .    /.\       Winter is upon us, and so      .
-            .   /..'\       is Advent of Code 2022!       .
+            .   /..'\       is Advent of Code!       .
             .   /'.'\                                     .
             .  /.''.'\   Run my puzzle solutions using    .
             .  /.'.'.\      the included binaries:        .
             . /'.''.'.\                                   .
-            . ^^^[_]^^^     cargo run --bin #             .
+            . ^^^[_]^^^     cargo run --bin yyyy_dd             .
             .                                             .
             .                         Happy Holidays,     .
             .jgs                            Nilsiker      .

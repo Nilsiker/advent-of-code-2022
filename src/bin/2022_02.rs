@@ -1,7 +1,7 @@
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
-    let lines = read_input_lines(2);
+    let lines = read_input_lines(2022, 2);
     let mut score = 0;
     let mut correct_score = 0;
 

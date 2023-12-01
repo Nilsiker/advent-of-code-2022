@@ -1,4 +1,5 @@
 # ⭐ Advent of Code ⭐
+[![License](https://img.shields.io/badge/license-MIT-informational)](LICENSE.MIT)
 
 ## Introduction
 

@@ -3,11 +3,11 @@ use std::{
     rc::{Rc, Weak},
 };
 
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
     let mut device = Device::new();
-    let mut lines = read_input_lines(7);
+    let mut lines = read_input_lines(2022, 7);
     lines.remove(0);
     for line in lines.iter() {
         let parts = line.split(' ').collect::<Vec<&str>>();

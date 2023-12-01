@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
     let pairs = setup_pairs();
@@ -34,7 +34,7 @@ fn ranges_partially_overlap(first: &RangeInclusive<u32>, other: &RangeInclusive<
 }
 
 fn setup_pairs() -> Vec<(Elf, Elf)> {
-    let lines = read_input_lines(4);
+    let lines = read_input_lines(2022, 4);
 
     let mut pairs = vec![];
     for line in lines {

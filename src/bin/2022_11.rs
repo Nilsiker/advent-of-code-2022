@@ -1,4 +1,4 @@
-use advent_of_code_2022::read_input_blocks;
+use advent_of_code::read_input_blocks;
 
 enum Part {
     A,
@@ -35,7 +35,7 @@ fn do_the_rounds(part: Part) {
 }
 
 fn get_monkeys() -> Troop {
-    let blocks = read_input_blocks(11);
+    let blocks = read_input_blocks(2022, 11);
     let mut worry_managing_number = 1;
     let monkeys = blocks
         .iter()
@@ -146,7 +146,7 @@ impl Monkey {
         manage_worry: bool,
     ) -> usize {
         self.items_inspected += 1;
-        let mut item = &mut self.items[index];
+        let item = &mut self.items[index];
         let op = &self.op;
         let test = &self.test;
 

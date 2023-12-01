@@ -1,9 +1,9 @@
 use std::collections::HashSet;
 
-use advent_of_code_2022::read_input_string;
+use advent_of_code::read_input_string;
 
 fn main() {
-    let data = read_input_string(6);
+    let data = read_input_string(2022, 6);
 
     if let Some(index) = find_end_of_segment_with_duplicate_characters(&data, 4) {
         println!("\nFirst packet marker ends at {}", index);

@@ -1,11 +1,11 @@
 use std::collections::HashSet;
 
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
     let mut two_knot_rope = Rope::new(2);
     let mut ten_knot_rope = Rope::new(10);
-    let lines = read_input_lines(9);
+    let lines = read_input_lines(2022, 9);
 
     for line in lines {
         let parts = line.split(' ').collect::<Vec<&str>>();

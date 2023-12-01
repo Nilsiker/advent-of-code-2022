@@ -1,7 +1,7 @@
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
-    let grid = TreeGrid::new(read_input_lines(8));
+    let grid = TreeGrid::new(read_input_lines(2022, 8));
     let width = grid.grid_width;
 
     let mut visible_counter = 4 * (width - 1);

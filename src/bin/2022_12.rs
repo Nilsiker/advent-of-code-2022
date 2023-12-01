@@ -3,10 +3,10 @@ use std::{
     usize,
 };
 
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
-    let data = read_input_lines(12);
+    let data = read_input_lines(2022, 12);
     let MapData {
         grid: map,
         width,

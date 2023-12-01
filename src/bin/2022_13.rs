@@ -1,11 +1,15 @@
+// NOTE never finished!
+
+#![allow(unused)]
 
 fn main() {
+    todo!();
     let input = get_packet_pairs();
     println!("{:#?}", input);
 }
 
-fn get_packet_pairs() -> Vec<(Packet,Packet)> {
-    let pairs = include_str!("../../inputs/13.txt")
+fn get_packet_pairs() -> Vec<(Packet, Packet)> {
+    let pairs = advent_of_code::read_input_string(2022, 13)
         .split("\n\n")
         .map(|pair| {
             let parts = pair.split("\n").collect::<Vec<&str>>();

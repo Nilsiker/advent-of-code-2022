@@ -1,7 +1,7 @@
-use advent_of_code_2022::read_input_lines;
+use advent_of_code::read_input_lines;
 
 fn main() {
-    let lines = read_input_lines(10);
+    let lines = read_input_lines(2022, 10);
     let ops: Vec<Op> = lines
         .into_iter()
         .map(|line| Op::from(line.as_str()))
