@@ -32,10 +32,7 @@ fn main() {
     println!("Part 2: All calibration values amount to {sum_part_2:?}");
 }
 
-fn get_first_and_last_token(
-    string: &str,
-    tokens: &[&'static str],
-) -> (&'static str, &'static str) {
+fn get_first_and_last_token(string: &str, tokens: &[&'static str]) -> (&'static str, &'static str) {
     let mut first_token: (usize, &str) = (usize::MAX, "");
     let mut last_token: (usize, &str) = (usize::MIN, "");
     tokens.iter().for_each(|token| {

@@ -31,6 +31,7 @@ pub fn read_input_string(year: u16, puzzle_number: u8) -> String {
     let Ok(file) = File::open(format!("./inputs/{year}_{puzzle_number:02}.txt")) else {
         panic!("The elves must have misplaced the input data...");
     };
+
     let mut buf: String = String::new();
     BufReader::new(file)
         .read_to_string(&mut buf)
