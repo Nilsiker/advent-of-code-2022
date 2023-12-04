@@ -1,4 +1,3 @@
-
 use advent_of_code::read_input_lines;
 
 fn main() {
@@ -9,7 +8,8 @@ fn main() {
 
     let mut card_counters = vec![1usize; cards.len()];
 
-    for i in 0..card_counters.len() {
+    // NOTE: ignore last card, since it doesn't reward subsequent cards!
+    for i in 0..card_counters.len() - 1 {
         let this_card_count = card_counters[i];
         let winning_numbers = cards[i].winning_numbers();
         let last_index = (i + winning_numbers).min(cards.len());
@@ -17,7 +17,7 @@ fn main() {
             .iter_mut()
             .for_each(|count| *count += this_card_count);
     }
-    
+
     let cards_sum: usize = card_counters.iter().map(|count| count).sum();
     let elapsed = start.elapsed();
 
@@ -34,8 +34,8 @@ struct Card {
 impl From<&String> for Card {
     fn from(value: &String) -> Self {
         let colon_index = value.find(':').expect("colon exists");
-
         let pipe_index = value.find('|').expect("pipe exists");
+
         let key: Vec<usize> = value[colon_index + 1..pipe_index]
             .split(' ')
             .filter(|str| !str.is_empty())
