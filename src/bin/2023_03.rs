@@ -1,4 +1,4 @@
-use advent_of_code::{read_input_lines, read_input_string};
+use advent_of_code::read_input_lines;
 use regex::Regex;
 
 fn main() {
