@@ -2,10 +2,10 @@ use advent_of_code::read_input_lines;
 
 fn main() {
     let start = std::time::Instant::now();
-
+    
     let cards: Vec<Card> = read_input_lines(2023, 4).iter().map(Card::from).collect();
     let score_sum: usize = cards.iter().map(|card| card.score()).sum();
-
+    
     let mut card_counters = vec![1usize; cards.len()];
 
     // NOTE: ignore last card, since it doesn't reward subsequent cards!
@@ -18,7 +18,7 @@ fn main() {
             .for_each(|count| *count += this_card_count);
     }
 
-    let cards_sum: usize = card_counters.iter().map(|count| count).sum();
+    let cards_sum: usize = card_counters.iter().sum();
     let elapsed = start.elapsed();
 
     println!("Part A would give a score sum of {score_sum:#?}.");
