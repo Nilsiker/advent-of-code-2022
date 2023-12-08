@@ -1,4 +1,4 @@
-// NOTE a weird one! Given the puzzle input, you can assume then end node is the end of the "loop".
+// NOTE a weird one! Given the puzzle input, I noticed the end node is the end of the "loop".
 // I took this as a general rule, making it a least common multiple problem.
 // However, if there were multiple end nodes, you'd have to actually simulate this
 // and I'm not even sure that is feasible to brute force!
