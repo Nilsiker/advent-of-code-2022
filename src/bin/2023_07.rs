@@ -1,3 +1,7 @@
+// NOTE use the PART_B flag to toggle between behaviours.
+// My sort function is dependent on the value of J cards, so it requires a refactor to be more easily switchable.
+// I'd rather start with day 8! :)
+
 use advent_of_code::read_input_lines;
 
 const PART_B: bool = true;
@@ -22,9 +26,6 @@ fn main() {
 
     let elapsed = start.elapsed();
 
-    for hand in &parsed_hands {
-        println!("{hand:?}\n");
-    }
     println!("{sum}");
     // let sum: usize = sorted_hands
     //     .iter()
@@ -44,29 +45,31 @@ struct Hand {
 }
 impl Hand {
     fn get_type(&self) -> Type {
-        let Self { cards, .. } = self;
-
-        let mut counts = std::collections::HashMap::new();
-
+        let mut counts = [0; 14];
         for card in &self.cards {
-            *counts.entry(card).or_insert(0) += 1;
+            counts[card.get_worth() - 1] += 1;
         }
 
-        let max = counts.iter().map(|e| e.1).max().expect("some max");
-        let pairs = counts.iter().map(|e| e.1).filter(|n| **n == 2).count();
-        println!("{max}");
+        if PART_B {
+            let jokers = counts[0];
+            counts[0] = 0;
+            counts.sort();
+            counts[13] += jokers;
+        } else {
+            counts.sort();
+        }
 
-        match max {
+        let ty = match counts[13] {
             4 => Type::FourOfAKind,
             3 => {
-                if pairs > 0 {
+                if counts[12] == 2 {
                     Type::FullHouse
                 } else {
                     Type::ThreeOfAKind
                 }
             }
             2 => {
-                if pairs == 2 {
+                if counts[12] == 2 {
                     Type::TwoPair
                 } else {
                     Type::OnePair
@@ -74,7 +77,9 @@ impl Hand {
             }
             1 => Type::HighCard,
             _ => Type::FiveOfAKind,
-        }
+        };
+
+        ty
     }
 }
 
