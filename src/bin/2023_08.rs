@@ -84,8 +84,7 @@ fn do_ghost_algorithm(sequence: &Vec<char>, map: &HashMap<String, (String, Strin
     for steps in steps_vec.iter().skip(1) {
         multiple = lcm(multiple, *steps)
     }
-
-    return multiple;
+    multiple
 }
 
 fn gcd(a: usize, b: usize) -> usize {

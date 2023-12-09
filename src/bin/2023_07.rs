@@ -59,7 +59,7 @@ impl Hand {
             counts.sort();
         }
 
-        let ty = match counts[13] {
+        match counts[13] {
             4 => Type::FourOfAKind,
             3 => {
                 if counts[12] == 2 {
@@ -77,9 +77,7 @@ impl Hand {
             }
             1 => Type::HighCard,
             _ => Type::FiveOfAKind,
-        };
-
-        ty
+        }
     }
 }
 
@@ -90,12 +88,12 @@ impl PartialOrd for Hand {
             .partial_cmp(&other.get_type())
             .expect("can compare type");
         for (a, b) in self.cards.iter().zip(&other.cards) {
-            match a.cmp(&b) {
+            match a.cmp(b) {
                 std::cmp::Ordering::Equal => continue,
-                _ => return Some(type_order.then(a.cmp(&b))),
+                _ => return Some(type_order.then(a.cmp(b))),
             }
         }
-        return Some(std::cmp::Ordering::Equal);
+        Some(std::cmp::Ordering::Equal)
     }
 }
 
@@ -124,7 +122,7 @@ impl From<&Type> for usize {
     }
 }
 
-#[derive(Hash, Debug, Clone)]
+#[derive(Hash, PartialEq, Eq, Debug, Clone)]
 struct Card(char);
 impl Card {
     fn get_worth(&self) -> usize {
@@ -144,15 +142,9 @@ impl Card {
         }
     }
 }
-impl Eq for Card {}
-impl PartialEq for Card {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
-    }
-}
 impl PartialOrd for Card {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.get_worth().partial_cmp(&other.get_worth())
+        Some(self.cmp(other))
     }
 }
 impl Ord for Card {
@@ -168,7 +160,7 @@ impl From<String> for Hand {
             .next()
             .expect("cards part")
             .chars()
-            .map(|char| Card(char))
+            .map(Card)
             .collect();
 
         let bid: usize = parts
