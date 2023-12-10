@@ -4,6 +4,8 @@
 // People were talking about expanding the grid, to account for "squeezes", but I didn't like the idea of that.
 // u/Boojum over at reddit pointed out some great axioms, which helped me get part 2 right in the end
 
+// Furthermore, I've seen people solving this with the shoelace formula and Pick's theorem.
+
 use std::{
     collections::{HashSet, VecDeque},
     fmt::Display,
@@ -293,6 +295,3 @@ impl std::fmt::Display for Tile {
         write!(f, "{c}")
     }
 }
-
-#[test]
-fn sample() {}
