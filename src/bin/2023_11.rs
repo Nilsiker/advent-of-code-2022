@@ -1,33 +1,55 @@
 // NOTE I am very happy with this one.
-// 
-// The key here was to not actually expand the star chart, 
+//
+// The key here was to not actually expand the star chart,
 // but keep track of empty rows and columns, and count each step into these rows/cols
 // as expansion_factor number of steps in worth.
-// 
-// This way, the compute time is constant no matter how large the expansion factor gets.
-// 
-// I seem to have a very slow way of determining the empty columns.
-// Without this, the solution runs in ~5 ms on my machine.
-// With the empty-row-col function, it takes just under a second.
 //
-// I'm okay with this!
+// This way, the compute time is constant no matter how large the expansion factor gets.
+//
+// I save the empty row and col indices, optimizing for speed rather than memory.
+//
+// This finishes under 5ms on my ThinkPad T480, inckuding parsing.
+
+use std::collections::HashSet;
 
 use advent_of_code::read_input_lines;
 
 fn main() {
+    let start = std::time::Instant::now();
     let lines = read_input_lines(2023, 11);
+
     let height = lines.len();
     let width = lines[0].len();
-    let start = std::time::Instant::now();
+    let mut data = vec![];
+    let mut galaxy_xs: HashSet<usize> = HashSet::new();
+    let mut galaxy_ys: HashSet<usize> = HashSet::new();
+
+    lines.join("").chars().enumerate().for_each(|(x, c)| {
+        let tile = Tile::from(c);
+        if matches!(tile, Tile::Galaxy) {
+            galaxy_xs.insert(x % width);
+            galaxy_ys.insert(x / width);
+        }
+        data.push(tile)
+    });
+
+    let empty_rows = (0..height)
+        .into_iter()
+        .filter(|y| !galaxy_ys.contains(y))
+        .collect();
+
+    let empty_cols = (0..width)
+        .into_iter()
+        .filter(|x| !galaxy_xs.contains(x))
+        .collect();
+
     let chart = Chart {
-        data: lines
-            .iter()
-            .flat_map(|string| string.chars().map(Tile::from))
-            .collect(),
+        data,
+        empty_rows,
+        empty_cols,
         width,
         height,
     };
-
     let (sum_a, sum_b) = chart.get_distance_sums();
     let elapsed = start.elapsed();
 
@@ -39,6 +61,8 @@ fn main() {
 
 struct Chart {
     data: Vec<Tile>,
+    empty_rows: Vec<usize>,
+    empty_cols: Vec<usize>,
     width: usize,
     height: usize,
 }
@@ -129,38 +153,40 @@ impl Chart {
         (distances_a.iter().sum(), distances_b.iter().sum())
     }
 
-    fn get_empty_row_indices(&self) -> Vec<usize> {
-        let mut indices = vec![];
-
-        'outer: for y in 0..self.height {
-            for x in 0..self.width {
-                if matches!(self.get(x, y), Some(Tile::Galaxy)) {
-                    continue 'outer;
-                }
-            }
-            indices.push(y);
-        }
-        indices
+    fn get_empty_row_indices(&self) -> &Vec<usize> {
+        // let mut indices = vec![];
+        // let width = self.width;
+        // for y in 0..self.height {
+        //     let slice = &self.data[y * width..y * width + width];
+        //     if slice.iter().all(|el| matches!(el, Tile::Space)) {
+        //         indices.push(y);
+        //     }
+        // }
+        // indices
+        &self.empty_rows
     }
 
-    fn get_empty_column_indices(&self) -> Vec<usize> {
-        let mut indices = vec![];
-        'outer: for x in 0..self.width {
-            for y in 0..self.height {
-                if matches!(self.get(x, y), Some(Tile::Galaxy)) {
-                    continue 'outer;
-                }
-            }
-            indices.push(x);
-        }
-
-        indices
+    fn get_empty_column_indices(&self) -> &Vec<usize> {
+        // let mut indices = vec![];
+        // for x in 0..self.width {
+        //     let to_check = (x..self.data.len()).step_by(self.width);
+        //     if to_check
+        //         .into_iter()
+        //         .map(|i| &self.data[i])
+        //         .all(|tile| matches!(tile, Tile::Space))
+        //     {
+        //         indices.push(x);
+        //     }
+        // }
+        // indices
+        &self.empty_cols
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Coord(usize, usize);
 
+#[derive(Debug, Clone)]
 enum Tile {
     Space,
     Galaxy,
