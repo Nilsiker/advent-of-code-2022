@@ -8,7 +8,7 @@
 //
 // I save the empty row and col indices, optimizing for speed rather than memory.
 //
-// This finishes under 5ms on my ThinkPad T480, inckuding parsing.
+// This finishes under 5ms on my ThinkPad T480, including parsing.
 
 use std::collections::HashSet;
 
@@ -132,7 +132,7 @@ impl Chart {
             let coords_to_pair = &coords[i + 1..coords.len()];
             for other in coords_to_pair {
                 let (distance_a, distance_b) = self.measure_distance(this, other, (1, 9999999));
-                
+
                 distances_a.push(distance_a);
                 distances_b.push(distance_b);
             }
