@@ -131,10 +131,8 @@ impl Chart {
             let this = &coords[i];
             let coords_to_pair = &coords[i + 1..coords.len()];
             for other in coords_to_pair {
-                // let distance = this.distance_to(other);
                 let (distance_a, distance_b) = self.measure_distance(this, other, (1, 9999999));
-                // println!("{this:?} -> {other:?} = {distance}");
-
+                
                 distances_a.push(distance_a);
                 distances_b.push(distance_b);
             }
