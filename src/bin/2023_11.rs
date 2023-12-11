@@ -33,13 +33,9 @@ fn main() {
         data.push(tile)
     });
 
-    let empty_rows = (0..height)
-        .filter(|y| !galaxy_ys.contains(y))
-        .collect();
+    let empty_rows = (0..height).filter(|y| !galaxy_ys.contains(y)).collect();
 
-    let empty_cols = (0..width)
-        .filter(|x| !galaxy_xs.contains(x))
-        .collect();
+    let empty_cols = (0..width).filter(|x| !galaxy_xs.contains(x)).collect();
 
     let chart = Chart {
         data,
@@ -97,27 +93,24 @@ impl Chart {
             from.1..to.1
         };
 
-        let expanded_rows = &self.empty_rows;
-        let expanded_cols = &self.empty_cols;
-
-        let expanded_rows_traveled = expanded_rows
+        let expanded_rows_traveled = &self.empty_rows
             .iter()
             .filter(|i| y_traveled.contains(i))
             .count();
-        let expanded_cols_traveled = expanded_cols
+        let expanded_cols_traveled = &self.empty_cols
             .iter()
             .filter(|i| x_traveled.contains(i))
             .count();
 
+        let regular_steps = x_traveled.count() + y_traveled.count();
+        let expanded_steps_a = (expansion_factor_a * expanded_rows_traveled)
+            + (expansion_factor_a * expanded_cols_traveled);
+        let expanded_steps_b = (expansion_factor_b * expanded_rows_traveled)
+            + (expansion_factor_b * expanded_cols_traveled);
+
         (
-            x_traveled.clone().count()
-                + y_traveled.clone().count()
-                + (expansion_factor_a * expanded_rows_traveled)
-                + (expansion_factor_a * expanded_cols_traveled),
-            x_traveled.count()
-                + y_traveled.count()
-                + (expansion_factor_b * expanded_rows_traveled)
-                + (expansion_factor_b * expanded_cols_traveled),
+            regular_steps + expanded_steps_a,
+            regular_steps + expanded_steps_b,
         )
     }
 
