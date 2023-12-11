@@ -1,8 +1,9 @@
 // NOTE I am very happy with this one.
 //
-// The key here was to not actually expand the star chart,
-// but keep track of empty rows and columns, and count each step into these rows/cols
-// as expansion_factor number of steps in worth.
+// The key here was to not actually expand the star chart.
+// Instead keep track of empty rows and columns.
+// Any step into a col or row that is empty, equals as many steps as the expansion factor.
+// A path never steps into a row/col more than once. 
 //
 // This way, the compute time is constant no matter how large the expansion factor gets.
 //
