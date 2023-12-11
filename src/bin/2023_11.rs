@@ -34,12 +34,10 @@ fn main() {
     });
 
     let empty_rows = (0..height)
-        .into_iter()
         .filter(|y| !galaxy_ys.contains(y))
         .collect();
 
     let empty_cols = (0..width)
-        .into_iter()
         .filter(|x| !galaxy_xs.contains(x))
         .collect();
 
@@ -98,10 +96,9 @@ impl Chart {
         } else {
             from.1..to.1
         };
-        // println!("{:?} -> {:?} = ({},{})", &from, &to, &x_traveled.count(), &y_traveled.count());
 
-        let expanded_rows = self.get_empty_row_indices();
-        let expanded_cols = self.get_empty_column_indices();
+        let expanded_rows = &self.empty_rows;
+        let expanded_cols = &self.empty_cols;
 
         let expanded_rows_traveled = expanded_rows
             .iter()
@@ -152,41 +149,12 @@ impl Chart {
 
         (distances_a.iter().sum(), distances_b.iter().sum())
     }
-
-    fn get_empty_row_indices(&self) -> &Vec<usize> {
-        // let mut indices = vec![];
-        // let width = self.width;
-        // for y in 0..self.height {
-        //     let slice = &self.data[y * width..y * width + width];
-        //     if slice.iter().all(|el| matches!(el, Tile::Space)) {
-        //         indices.push(y);
-        //     }
-        // }
-        // indices
-        &self.empty_rows
-    }
-
-    fn get_empty_column_indices(&self) -> &Vec<usize> {
-        // let mut indices = vec![];
-        // for x in 0..self.width {
-        //     let to_check = (x..self.data.len()).step_by(self.width);
-        //     if to_check
-        //         .into_iter()
-        //         .map(|i| &self.data[i])
-        //         .all(|tile| matches!(tile, Tile::Space))
-        //     {
-        //         indices.push(x);
-        //     }
-        // }
-        // indices
-        &self.empty_cols
-    }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 struct Coord(usize, usize);
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 enum Tile {
     Space,
     Galaxy,
