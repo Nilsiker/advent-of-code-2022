@@ -25,7 +25,7 @@ fn main() {
     let mut galaxy_xs: HashSet<usize> = HashSet::new();
     let mut galaxy_ys: HashSet<usize> = HashSet::new();
 
-    lines.join("").chars().enumerate().for_each(|(x, c)| {
+    lines.join("").char_indices().for_each(|(x, c)| {
         let tile = Tile::from(c);
         if matches!(tile, Tile::Galaxy) {
             galaxy_xs.insert(x % width);
@@ -35,7 +35,6 @@ fn main() {
     });
 
     let empty_rows = (0..height).filter(|y| !galaxy_ys.contains(y)).collect();
-
     let empty_cols = (0..width).filter(|x| !galaxy_xs.contains(x)).collect();
 
     let chart = Chart {
