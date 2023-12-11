@@ -1,49 +1,61 @@
+// NOTE I am very happy with this one.
+// 
+// The key here was to not actually expand the star chart, 
+// but keep track of empty rows and columns, and count each step into these rows/cols
+// as expansion_factor number of steps in worth.
+// 
+// This way, the compute time is constant no matter how large the expansion factor gets.
+// 
+// I seem to have a very slow way of determining the empty columns.
+// Without this, the solution runs in ~5 ms on my machine.
+// With the empty-row-col function, it takes just under a second.
+//
+// I'm okay with this!
+
 use advent_of_code::read_input_lines;
 
 fn main() {
     let lines = read_input_lines(2023, 11);
+    let height = lines.len();
+    let width = lines[0].len();
     let start = std::time::Instant::now();
-    let chart = Chart(
-        lines
-            .into_iter()
-            .map(|line| line.chars().map(Tile::from).collect())
+    let chart = Chart {
+        data: lines
+            .iter()
+            .flat_map(|string| string.chars().map(Tile::from))
             .collect(),
-        0,
-        0,
-    );
+        width,
+        height,
+    };
 
     let (sum_a, sum_b) = chart.get_distance_sums();
     let elapsed = start.elapsed();
 
+    println!("{chart}");
     println!("The sum of all minimal paths are {sum_a} with expansion factor 2");
     println!("The sum of all minimal paths are {sum_b} with expansion factor 1 000 000");
     println!("{elapsed:?}");
 }
 
-struct Chart(Vec<Vec<Tile>>, usize, usize);
+struct Chart {
+    data: Vec<Tile>,
+    width: usize,
+    height: usize,
+}
 impl std::fmt::Display for Chart {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in &self.0 {
-            for tile in row {
-                write!(f, "{tile}")?;
+        for i in 0..self.data.len() {
+            if i % self.width == 0 {
+                writeln!(f)?;
             }
-            writeln!(f)?;
+            write!(f, "{}", self.data[i])?;
         }
         Ok(())
     }
 }
-
 impl Chart {
     fn get(&self, x: usize, y: usize) -> Option<&Tile> {
-        self.0.get(y).and_then(|row| row.get(x))
-    }
-
-    fn get_row_count(&self) -> usize {
-        self.0.len()
-    }
-
-    fn get_column_count(&self) -> usize {
-        self.0[0].len()
+        self.data.get(y * self.width + x)
     }
 
     fn measure_distance(
@@ -90,8 +102,8 @@ impl Chart {
 
     fn get_distance_sums(&self) -> (usize, usize) {
         let mut coords = vec![];
-        for y in 0..self.get_row_count() {
-            for x in 0..self.get_column_count() {
+        for y in 0..self.width {
+            for x in 0..self.height {
                 if matches!(self.get(x, y), Some(Tile::Galaxy)) {
                     coords.push(Coord(x, y));
                 }
@@ -120,18 +132,21 @@ impl Chart {
     fn get_empty_row_indices(&self) -> Vec<usize> {
         let mut indices = vec![];
 
-        for y in 0..self.get_row_count() {
-            if self.0[y].iter().all(|tile| matches!(tile, Tile::Space)) {
-                indices.push(y);
+        'outer: for y in 0..self.height {
+            for x in 0..self.width {
+                if matches!(self.get(x, y), Some(Tile::Galaxy)) {
+                    continue 'outer;
+                }
             }
+            indices.push(y);
         }
         indices
     }
 
     fn get_empty_column_indices(&self) -> Vec<usize> {
         let mut indices = vec![];
-        'outer: for x in 0..self.get_column_count() {
-            for y in 0..self.get_row_count() {
+        'outer: for x in 0..self.width {
+            for y in 0..self.height {
                 if matches!(self.get(x, y), Some(Tile::Galaxy)) {
                     continue 'outer;
                 }
@@ -156,8 +171,8 @@ impl std::fmt::Display for Tile {
             f,
             "{}",
             match &self {
-                Tile::Galaxy => '#',
-                Tile::Space => '.',
+                Tile::Galaxy => '✦',
+                Tile::Space => ' ',
             }
         )
     }
