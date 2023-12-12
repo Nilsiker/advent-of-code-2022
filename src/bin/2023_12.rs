@@ -10,7 +10,7 @@ fn main() {
     let mut springs_unfolded = vec![];
     let mut groups_unfolded = vec![];
 
-    // let mut memo = HashMap::new();
+    let mut memo = HashMap::new();
 
     lines.iter().for_each(|line| {
         let mut parts = line.split_whitespace();
@@ -21,8 +21,8 @@ fn main() {
             .split(',')
             .map(|c| c.parse::<usize>().unwrap())
             .collect::<Vec<_>>();
-        let springs_unfolded_str = format!("{springs_str}?").repeat(5);
-        let groups_unfolded_vec = groups_vec.repeat(5);
+        let springs_unfolded_str = format!("{springs_str}?").repeat(4);
+        let groups_unfolded_vec = groups_vec.repeat(4);
         springs.push(springs_str);
         groups.push(groups_vec);
 
@@ -30,48 +30,55 @@ fn main() {
         groups_unfolded.push(groups_unfolded_vec);
     });
 
-    let mut sum = 0;
+    let mut sum_a = 0;
     for i in 0..springs.len() {
-        sum += brute_force_arrangement_count(springs[i], &groups[i]);
+        // println!("Part A: calculating {i}...");
+        sum_a += brute_force_arrangement_count(springs[i], &groups[i], &mut memo);
     }
-
+    let mut sum_b = 0;
     // for i in 0..springs_unfolded.len() {
-    //     sum += brute_force_arrangement_count(&springs_unfolded[i], &groups_unfolded[i]);
+    //     println!("Part B: calculating {i}...");
+    //     sum_b +=
+    //         brute_force_arrangement_count(&springs_unfolded[i], &groups_unfolded[i], &mut memo);
     // }
 
     let elapsed = start.elapsed();
-    println!("{sum}");
+    println!("Part A: {sum_a}");
+    println!("Part B: {sum_b}");
     println!("{elapsed:?}");
 }
 
-fn is_possible_arrangement(spring_str: &str, groups: &[usize]) -> bool {
-    let springs = spring_str
-        .split('.')
-        .filter(|a| !a.is_empty())
-        .collect::<Vec<_>>();
-
-    // early return false if the parts aren't as many as the groups (needs more dotage!)
-    if springs.len() != groups.len() {
-        return false;
-    }
-
-    springs
-        .iter()
-        .zip(groups.iter())
-        .all(|(spring, instr)| spring.len() == *instr)
-}
-
-fn brute_force_arrangement_count(spring_str: &str, groups: &[usize]) -> usize {
-    if spring_str.contains('?') {
-        let working_springs = spring_str.replacen('?', ".", 1);
-        let damaged_spring = spring_str.replacen('?', "#", 1);
-        brute_force_arrangement_count(&working_springs, groups)
-            + brute_force_arrangement_count(&damaged_spring, groups)
-    } else {
-        if is_possible_arrangement(spring_str, groups) {
-            1
-        } else {
-            0
+fn brute_force_arrangement_count(
+    springs: &str,
+    groups: &[usize],
+    memo: &mut HashMap<(String, usize), usize>,
+) -> usize {
+    let mut sum = 0;
+    let variants = get_all_possible_variants(springs);
+    for variant in variants {
+        let sections = variant
+            .split('.')
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<_>>();
+        if sections.len() != groups.len() {
+            continue;
+        }
+        if sections.iter().zip(groups).all(|(el,group_size)| el.len()==*group_size) {
+            sum +=1;
         }
     }
+    sum
+}
+
+fn get_all_possible_variants(springs: &str) -> Vec<String> {
+    let mut variants = vec![];
+    if springs.contains('?') {
+        let damaged = springs.replacen('?', "#", 1);
+        let working = springs.replacen('?', ".", 1);
+        variants.append(&mut get_all_possible_variants(&damaged));
+        variants.append(&mut get_all_possible_variants(&working));
+    } else {
+        variants.push(springs.to_string());
+    }
+    variants
 }
