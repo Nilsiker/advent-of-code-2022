@@ -1,5 +1,13 @@
-// NOTE
+// NOTE It took me a great while getting the reflection-loop right,
+// but this finishes in about 500µs, which is a great runtime imo!
+// 
+// The algorithm places the reflection line, corrects for smudges 
+// and reverts the correction and increments the reflection line
+// if we find an invalid line comparison.
 //
+// When we reach outside of the lines vector AND the smudge is corrected,
+// this counts as a valid reflection line, and we return the index of the reflection line
+// (reflection line is imagined to be placed AFTER the index)
 
 use std::collections::VecDeque;
 
