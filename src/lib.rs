@@ -23,7 +23,7 @@ pub fn read_input_lines(year: u16, puzzle_number: u8) -> Vec<String> {
 pub fn read_input_blocks(year: u16, puzzle_number: u8) -> Vec<String> {
     let string = read_input_string(year, puzzle_number);
 
-    let blocks: Vec<String> = string.split("\r\n\r\n").map(String::from).collect();
+    let blocks: Vec<String> = string.split("\n\n").map(String::from).collect();
     blocks
 }
 
